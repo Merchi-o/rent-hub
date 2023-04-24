@@ -2,11 +2,12 @@
   "private": true,
   "sideEffects": false,
   "scripts": {
-    "build": "remix build",
+    "build": "prisma generate && remix build",
     "dev": "run-p dev:*",
     "dev:db": "npm run db:run:dev",
     "dev:remix": "cross-env NODE_ENV=development remix dev",
     "typecheck": "tsc",
+    "postinstall": "prisma generate",
     "db:setup": "prisma generate && prisma migrate deploy",
     "db:update": "npx prisma db push",
     "db:inspect": "npx prisma studio",
