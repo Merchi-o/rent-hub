@@ -1,0 +1,26 @@
+.SwitchRoot {
+  width: 42px;
+  height: 25px;
+  background-color: theme(colors.neutral.900);
+  border-radius: 9999px;
+  position: relative;
+  box-shadow: 0 2px 10px theme(colors.neutral.700);
+  -webkit-tap-highlight-color: theme(colors.black);
+}
+.SwitchRoot:focus {
+  box-shadow: 0 0 0 2px black;
+}
+.SwitchRoot[data-state='checked'] {
+  background-color: black;
+}
+
+.SwitchThumb {
+	@apply block w-[21px] h-[21px] bg-white rounded-full shadow-sm transition-transform will-change-transform;
+}
+.SwitchThumb[data-state='checked'] {
+  transform: translateX(19px);
+}
+
+.Label {
+	@apply text-neutral-700 text-lg leading-none;
+}
