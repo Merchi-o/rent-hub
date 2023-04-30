@@ -5,8 +5,6 @@ import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 
 import { createUser, getUserByEmail } from "~/models/user.server";
-import { validateEmail } from "~/utils/email";
-import { safeRedirect } from "~/utils/remix";
 import { createUserSession, getUserId } from "~/utils/session.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -19,11 +17,18 @@ export const action = async ({ request }: ActionArgs) => {
   const formData = await request.formData();
   const email = formData.get("email");
   const password = formData.get("password");
-  const redirectTo = safeRedirect(formData.get("redirectTo"), "/");
+  const redirectTo = getRedirectTo(formData.get('safeRedirect'), '/')
 
-  if (!validateEmail(email)) {
+  if (!isValidEmail(email)) {
     return json(
       { errors: { email: "Email is invalid", password: null } },
+      { status: 400 }
+    );
+  }
+
+  if (typeof password !== "string" || password.length === 0) {
+    return json(
+      { errors: { email: null, password: "Password is required" } },
       { status: 400 }
     );
   }
@@ -165,4 +170,24 @@ export default function Join() {
       </div>
     </div>
   );
+}
+
+const DEFAULT_REDIRECT = '/'
+function getRedirectTo(
+  to: FormDataEntryValue | string | null | undefined,
+  defaultRedirect: string = DEFAULT_REDIRECT
+) {
+  if (!to || typeof to !== "string") {
+    return defaultRedirect;
+  }
+
+  if (!to.startsWith("/") || to.startsWith("//")) {
+    return defaultRedirect;
+  }
+
+  return to;
+}
+
+function isValidEmail(email: unknown): email is string {
+  return typeof email === "string" && email.length > 3 && email.includes("@");
 }
