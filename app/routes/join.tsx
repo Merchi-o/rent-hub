@@ -33,13 +33,6 @@ export const action = async ({ request }: ActionArgs) => {
     );
   }
 
-  if (typeof password !== "string" || password.length === 0) {
-    return json(
-      { errors: { email: null, password: "Password is required" } },
-      { status: 400 }
-    );
-  }
-
   if (password.length < 8) {
     return json(
       { errors: { email: null, password: "Password is too short" } },
