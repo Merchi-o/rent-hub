@@ -2,7 +2,6 @@ node_modules
 
 .cache
 .env
-.vercel
 .output
 
 /build/
@@ -10,5 +9,4 @@ node_modules
 /api/index.js
 /api/index.js.map
 
-# Local Netlify folder
 .netlify
