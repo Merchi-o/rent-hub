@@ -3,6 +3,7 @@ import type { ActionArgs, LoaderArgs, V2_MetaFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import { useEffect, useRef } from "react";
+import { z } from "zod";
 
 import { createUser, getUserByEmail } from "~/models/user.server";
 import { createUserSession, getUserId } from "~/utils/session.server";
@@ -13,19 +14,39 @@ export const loader = async ({ request }: LoaderArgs) => {
   return json({});
 };
 
+const emailSchema = z.string().email({ message: 'Your email is invalid' })
+
 export const action = async ({ request }: ActionArgs) => {
   const formData = await request.formData();
-  const email = formData.get("email");
+  const formEmail = formData.get("email");
   const password = formData.get("password");
   const redirectTo = getRedirectTo(formData.get('safeRedirect'), '/')
+  const validatedEmail = emailSchema.safeParse(formEmail)
 
-  if (!isValidEmail(email)) {
-    return json(
-      { errors: { email: "Email is invalid", password: null } },
-      { status: 400 }
-    );
+  if (!validatedEmail.success) { // <---- esto es un "type guard", lo que hara que:
+                                 // en este bloque de ejecucion el valor de "validatedEmail.success"
+                                 // sera "false", por lo tanto: 
+                                 // - al tener el valor de "false" y
+                                 // - porque el tipo de la funcion es { success: false, error: ZodError }
+                                 // estamos seguro
+                                 console.log('es un email invalido')
+    return new Response(
+      JSON.stringify({ errors: { email: validatedEmail.error.message, password: null } }), 
+      {
+        status: 400,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+    })
+    // return json(
+    //   { errors: { email: validatedEmail.error.message, password: null } },
+    //   { status: 400,  }
+    // );
   }
 
+  const { data: email } = validatedEmail
+
+  // A
   if (typeof password !== "string" || password.length === 0) {
     return json(
       { errors: { email: null, password: "Password is required" } },
@@ -33,6 +54,8 @@ export const action = async ({ request }: ActionArgs) => {
     );
   }
 
+  // B
+  // A y B van a estar los 2 contemplados dentro de un un mismo schema para el password
   if (password.length < 8) {
     return json(
       { errors: { email: null, password: "Password is too short" } },
