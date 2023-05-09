@@ -3,9 +3,9 @@ import type { ActionArgs, LoaderArgs, V2_MetaFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import { useEffect, useRef } from "react";
-
 import { createUser, getUserByEmail } from "~/models/user.server";
 import { createUserSession, getUserId } from "~/utils/session.server";
+import { z } from "zod";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await getUserId(request);
@@ -13,32 +13,47 @@ export const loader = async ({ request }: LoaderArgs) => {
   return json({});
 };
 
+const emailSchema = z.string().email({ message: 'Your email is invalid' })
+const passwordSchema = z.string()
+  .min(8, { message: "La contraseña debe tener al menos 8 caracteres." })
+  .regex(/[!@#$%^&*(),.?":{}|<>]/, { message: "La contraseña debe contener al menos un carácter especial." })
+  .regex(/\d/, { message: "La contraseña debe contener al menos un número." })
+
+
 export const action = async ({ request }: ActionArgs) => {
   const formData = await request.formData();
-  const email = formData.get("email");
-  const password = formData.get("password");
+  const formEmail = formData.get("email");
+  const formPassword = formData.get("password");
   const redirectTo = getRedirectTo(formData.get('safeRedirect'), '/')
+  const validatedEmail = emailSchema.safeParse(formEmail);
+  const validatedPassword = passwordSchema.safeParse(formPassword); 
 
-  if (!isValidEmail(email)) {
-    return json(
-      { errors: { email: "Email is invalid", password: null } },
-      { status: 400 }
-    );
-  }
+  if (!validatedEmail.success) {  console.log('es un email invalido')
+    return new Response(
+      JSON.stringify({ errors: { email: validatedEmail.error.message, formPassword: null } }), 
+      {
+        status: 400,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+    })
+      }
 
-  if (typeof password !== "string" || password.length === 0) {
-    return json(
-      { errors: { email: null, password: "Password is required" } },
-      { status: 400 }
-    );
-  }
+      const { data: email } = validatedEmail;
 
-  if (password.length < 8) {
-    return json(
-      { errors: { email: null, password: "Password is too short" } },
-      { status: 400 }
-    );
-  }
+  if (!validatedPassword.success) {  console.log('es una contraseña invalida')
+  return new Response(
+    JSON.stringify({ errors: { email: null, password: validatedPassword.error.message} }), 
+    {
+      status: 400,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+  })
+    }
+
+
+   const { data: password } = validatedPassword; 
 
   const existingUser = await getUserByEmail(email);
   if (existingUser) {
@@ -179,8 +194,4 @@ function getRedirectTo(
   }
 
   return to;
-}
-
-function isValidEmail(email: unknown): email is string {
-  return typeof email === "string" && email.length > 3 && email.includes("@");
 }
