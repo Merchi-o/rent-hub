@@ -15,9 +15,9 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 const emailSchema = z.string().email({ message: 'Your email is invalid' })
 const passwordSchema = z.string()
-  .min(8, { message: "La contraseña debe tener al menos 8 caracteres." })
-  .regex(/[!@#$%^&*(),.?":{}|<>]/, { message: "La contraseña debe contener al menos un carácter especial." })
-  .regex(/\d/, { message: "La contraseña debe contener al menos un número." })
+  .min(8, { message: "La contraseña debe tener al menos 8 caracteres" })
+  .regex(/[!@#$%^&*(),.?":{}|<>]/, { message: "La contraseña debe contener al menos un carácter especial" })
+  .regex(/\d/, { message: "La contraseña debe contener al menos un número" })
 
 
 export const action = async ({ request }: ActionArgs) => {
@@ -28,7 +28,7 @@ export const action = async ({ request }: ActionArgs) => {
   const validatedEmail = emailSchema.safeParse(formEmail);
   const validatedPassword = passwordSchema.safeParse(formPassword); 
 
-  if (!validatedEmail.success) {  console.log('es un email invalido')
+  if (!validatedEmail.success) {  
     return new Response(
       JSON.stringify({ errors: { email: validatedEmail.error.message, formPassword: null } }), 
       {
@@ -41,7 +41,7 @@ export const action = async ({ request }: ActionArgs) => {
 
       const { data: email } = validatedEmail;
 
-  if (!validatedPassword.success) {  console.log('es una contraseña invalida')
+  if (!validatedPassword.success) {  
   return new Response(
     JSON.stringify({ errors: { email: null, password: validatedPassword.error.message} }), 
     {
