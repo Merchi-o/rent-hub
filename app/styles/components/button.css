@@ -1,0 +1,7 @@
+button.btn {
+  @apply bg-slate-300
+}
+
+button.btn.btn-primary {
+  @apply text-green-500 hover:text-green-700
+}
