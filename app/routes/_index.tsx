@@ -15,7 +15,7 @@ export default function Index() {
         <Switch.Thumb className="SwitchThumb" />
       </Switch.Root>
       <button className="btn btn-primary">Primary button</button>
-      <a className="link">Header link</a>
+    
     </main>
   );
 }
