@@ -1,0 +1,14 @@
+
+.NavigationMenuRoot {
+  @apply flex flex-row relative justify-center
+  }
+  
+  .NavigationMenuList {
+    @apply flex
+  }
+
+
+.NavigationMenuLink {
+    @apply p-0 w-10 h-6 text-base font-syne font-normal mx-2.5 hover:border-b-4 border-solid border-indigo-500;
+}
+

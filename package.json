@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@prisma/client": "^4.13.0",
+    "@radix-ui/react-navigation-menu": "^1.1.2",
     "@radix-ui/react-switch": "^1.0.2",
     "@remix-run/netlify": "^1.15.0",
     "@remix-run/node": "^1.15.0",
