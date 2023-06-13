@@ -1,7 +1,7 @@
 @import url("./radix/switch.css");
+@import url("./radix/navigation-menu.css");
 @import url("./components/button.css");
 @import url("./components/link.css");
-@import url("./radix/navigation-menu.css");
 
 @tailwind base;
 @tailwind components;

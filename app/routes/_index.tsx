@@ -1,7 +1,7 @@
 import * as Switch from "@radix-ui/react-switch";
 import type { V2_MetaFunction } from "@remix-run/node";
 import { Link } from "@remix-run/react";
-import { Header } from "../components/header";
+import { Header } from "~/components/header";
 
 export const meta: V2_MetaFunction = () => {
   return [{ title: "New Remix App" }];
@@ -20,7 +20,7 @@ export default function Index() {
         <Switch.Thumb className="SwitchThumb" />
       </Switch.Root>
       <button className="btn btn-primary">Primary button</button>
-      <Header></Header>
+      <Header />
     </main>
   );
 }

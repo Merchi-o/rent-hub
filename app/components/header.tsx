@@ -1,6 +1,6 @@
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 
-export const Header = () => {
+export function Header() {
   return (
     <NavigationMenu.Root className="NavigationMenuRoot">
       <NavigationMenu.List className="NavigationMenuList">
@@ -9,13 +9,11 @@ export const Header = () => {
             Menu
           </NavigationMenu.Link>
         </NavigationMenu.Item>
-
         <NavigationMenu.Item>
           <NavigationMenu.Link className="NavigationMenuLink" href="">
             Menu
           </NavigationMenu.Link>
         </NavigationMenu.Item>
-
         <NavigationMenu.Item>
           <NavigationMenu.Link className="NavigationMenuLink" href="">
             Explorar
@@ -24,4 +22,4 @@ export const Header = () => {
       </NavigationMenu.List>
     </NavigationMenu.Root>
   );
-};
+}
