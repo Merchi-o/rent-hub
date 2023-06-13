@@ -1,4 +1,4 @@
-import { LinksFunction } from "@remix-run/node";
+import type { LinksFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -11,11 +11,21 @@ import stylesheet from "~/styles/app.css";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
+  {
+    rel: "preconnect",
+    href: "https://fonts.gstatic.com",
+    crossOrigin: "anonymous",
+  },
+  { rel: "preconnect", href: "https://fonts.googleapis.com" },
+  {
+    href: "https://fonts.googleapis.com/css2?family=Syne&display=swap",
+    rel: "stylesheet",
+  },
 ];
 
 export default function App() {
   return (
-   <html lang="en">
+    <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
